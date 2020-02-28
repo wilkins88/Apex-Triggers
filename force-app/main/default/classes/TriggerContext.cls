@@ -4,7 +4,7 @@
  * @Author             : Thomas Wilkins
  * @Group              : 
  * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 2/28/2020, 1:54:36 PM
+ * @Last Modified On   : 2/28/2020, 3:54:31 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    2/28/2020   Thomas Wilkins     Initial Version
@@ -25,7 +25,7 @@ public class TriggerContext {
     * @author Thomas Wilkins | 2/28/2020 
     * @return List<SObject> 
     **/
-    public List<SObject> getTriggerNewMap() {
+    public Map<Id, SObject> getTriggerNewMap() {
         return System.Trigger.newMap;
     }
 
@@ -43,7 +43,7 @@ public class TriggerContext {
     * @author Thomas Wilkins | 2/28/2020 
     * @return List<SObject> 
     **/
-    public List<SObject> getTriggerOldMap() {
+    public Map<Id, SObject> getTriggerOldMap() {
         return System.Trigger.oldMap;
     }
 

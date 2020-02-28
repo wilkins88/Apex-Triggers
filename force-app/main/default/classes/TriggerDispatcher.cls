@@ -4,7 +4,7 @@
  * @Author             : Thomas Wilkins
  * @Group              : 
  * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 2/28/2020, 2:20:42 PM
+ * @Last Modified On   : 2/28/2020, 3:59:25 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    2/28/2020   Thomas Wilkins     Initial Version
@@ -48,11 +48,12 @@ public class TriggerDispatcher {
         if (!executeHandlers) return;
         for (ITriggerHandler handler : loadHandlers(sObjType)) {
             if (ctx.isBeforeInsert()) handler.doBeforeInsert();
-            if (ctx.isBeforeUpdate()) handler.doBeforeUpdate();
-            if (ctx.isBeforeDelete()) handler.doBeforeDelete();
-            if (ctx.isAfterInsert()) handler.doAfterInsert();
-            if (ctx.isAfterUpdate()) handler.doAfterUpdate();
-            if (ctx.isAfterUndelete()) handler.doAfterUndelete();
+            else if (ctx.isBeforeUpdate()) handler.doBeforeUpdate();
+            else if (ctx.isBeforeDelete()) handler.doBeforeDelete();
+            else if (ctx.isAfterInsert()) handler.doAfterInsert();
+            else if (ctx.isAfterUpdate()) handler.doAfterUpdate();
+            else if (ctx.isAfterDelete()) handler.doAfterDelete();
+            else if (ctx.isAfterUndelete()) handler.doAfterUndelete();
         }
     }
 
@@ -75,7 +76,7 @@ public class TriggerDispatcher {
     * @return List<ITriggerHandler> 
     **/
     @TestVisible
-    private List<ITriggerHandler> loadHandlers(Schema.SObjectType sObjType) {
+    private static List<ITriggerHandler> loadHandlers(Schema.SObjectType sObjType) {
         String sObjTypeStr = String.valueOf(sObjType);
         if (handlerMap.containsKey(sObjTypeStr)) return handlerMap.get(sObjTypeStr);
 
