@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SObjectType__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>The type of SObject this setting is for (e.g. Account)</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>The type of SObject this setting is for (e.g. Account)</inlineHelpText>
+    <label>SObject Type</label>
+    <length>60</length>
+    <required>true</required>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

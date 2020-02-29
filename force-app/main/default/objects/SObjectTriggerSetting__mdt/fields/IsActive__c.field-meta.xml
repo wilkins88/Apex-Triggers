@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IsActive__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Whether or not the SObject setting is active. Setting this as inactive will disable all trigger handlers for this sObject type.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>Whether or not the SObject setting is active. Setting this as inactive will disable all trigger handlers for this sObject type.</inlineHelpText>
+    <label>Is Active</label>
+    <type>Checkbox</type>
+</CustomField>

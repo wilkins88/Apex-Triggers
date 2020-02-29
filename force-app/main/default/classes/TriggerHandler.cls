@@ -1,13 +1,13 @@
 /**
  * @File Name          : TriggerHandler.cls
- * @Description        : Virtual class htat trigger handles should all extend
+ * @Description        : Virtual class that all trigger handlers should extend
  * @Author             : Thomas Wilkins
  * @Group              : 
- * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 2/2/2020, 6:06:52 PM
+ * @Last Modified By   : Thomas Wilkins
+ * @Last Modified On   : 2/28/2020, 8:56:47 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
- * 1.0    2/2/2020         Thomas Wilkins          Initial Version
+ * 1.0    2/28/2020         Thomas Wilkins          Initial Version
 **/
 public virtual class TriggerHandler implements ITriggerHandler {
 
