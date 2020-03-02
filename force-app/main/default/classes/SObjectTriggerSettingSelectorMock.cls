@@ -4,14 +4,14 @@
  * @Author             : Thomas Wilkins
  * @Group              : 
  * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 3/2/2020, 10:09:43 AM
+ * @Last Modified On   : 3/2/2020, 3:24:02 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    3/2/2020   Thomas Wilkins     Initial Version
 **/
 @IsTest
 public class SObjectTriggerSettingSelectorMock implements System.StubProvider {
-    Map<String, List<SObjectTriggerSetting__mdt>> settings;
+    private Map<String, List<SObjectTriggerSetting__mdt>> settings;
     public SObjectTriggerSettingSelectorMock(Map<String, List<SObjectTriggerSetting__mdt>> settings) {
         this.settings = settings;
     }

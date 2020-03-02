@@ -4,7 +4,7 @@
  * @Author             : Thomas Wilkins
  * @Group              : 
  * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 2/28/2020, 3:54:31 PM
+ * @Last Modified On   : 3/2/2020, 3:47:01 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    2/28/2020   Thomas Wilkins     Initial Version
@@ -61,7 +61,7 @@ public class TriggerContext {
     * @author Thomas Wilkins | 2/28/2020 
     * @return Boolean 
     **/
-    public Boolean IsBeforeUpdate() {
+    public Boolean isBeforeUpdate() {
         return System.Trigger.operationType == System.TriggerOperation.BEFORE_UPDATE;
     }
 

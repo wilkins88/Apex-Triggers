@@ -4,35 +4,38 @@
  * @Author             : Thomas Wilkins
  * @Group              : 
  * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 3/2/2020, 10:02:29 AM
+ * @Last Modified On   : 3/2/2020, 3:38:05 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    2/28/2020   Thomas Wilkins     Initial Version
 **/
 public class TriggerDispatcher {
 
+    @TestVisible
     private static final String CANNOT_DISABLE_TRIGGERS = 'Can only disable triggers in a test context.';
-    private static final String CANNOT_SET_HANDLERS = 'Can only set handlers in a test context.';
 
-    private static Map<String, List<ITriggerHandler>> handlerMap {
+    @TestVisible
+    private TriggerContext ctx;
+    @TestVisible
+    private SObjectTriggerSettingSelector selector;
+    @TestVisible
+    private Map<String, List<ITriggerHandler>> handlerMap {
         get {
             if (handlerMap == null) handlerMap = new Map<String, List<ITriggerHandler>>();
             return handlerMap;
         } set;
     }
-
-    private static TriggerContext ctx {
+    @TestVisible
+    private Boolean executeHandlers {
         get {
-            if (ctx == null) ctx = new TriggerContext();
-            return ctx;
+            if (executeHandlers == null) return true;
+            return executeHandlers;
         } set;
     }
 
-    private static Boolean executeHandlers {
-        get {
-            if (executeHandlers == null) return false;
-            return executeHandlers;
-        } set;
+    public TriggerDispatcher(TriggerContext ctx, SObjectTriggerSettingSelector selector) {
+        this.ctx = ctx;
+        this.selector = selector;
     }
 
     /**
@@ -41,16 +44,16 @@ public class TriggerDispatcher {
     * @param sObjType The type of sObject e.g. Account to run triggers for
     * @return void 
     **/
-    public static void dispatch(Schema.SObjectType sObjType) {
+    public void dispatch(Schema.SObjectType sObjType) {
         if (!executeHandlers) return;
-        for (ITriggerHandler handler : loadHandlers(sObjType)) {
-            if (ctx.isBeforeInsert()) handler.doBeforeInsert();
-            else if (ctx.isBeforeUpdate()) handler.doBeforeUpdate();
-            else if (ctx.isBeforeDelete()) handler.doBeforeDelete();
-            else if (ctx.isAfterInsert()) handler.doAfterInsert();
-            else if (ctx.isAfterUpdate()) handler.doAfterUpdate();
-            else if (ctx.isAfterDelete()) handler.doAfterDelete();
-            else if (ctx.isAfterUndelete()) handler.doAfterUndelete();
+        for (ITriggerHandler handler : this.loadHandlers(sObjType)) {
+            if (this.ctx.isBeforeInsert()) handler.doBeforeInsert();
+            else if (this.ctx.isBeforeUpdate()) handler.doBeforeUpdate();
+            else if (this.ctx.isBeforeDelete()) handler.doBeforeDelete();
+            else if (this.ctx.isAfterInsert()) handler.doAfterInsert();
+            else if (this.ctx.isAfterUpdate()) handler.doAfterUpdate();
+            else if (this.ctx.isAfterDelete()) handler.doAfterDelete();
+            else if (this.ctx.isAfterUndelete()) handler.doAfterUndelete();
         }
     }
 
@@ -61,21 +64,9 @@ public class TriggerDispatcher {
     * @param shouldExecute Whether or not triggers should execute
     * @return void 
     **/
-    public static void shouldExecuteHandlers(Boolean shouldExecute) {
+    public void shouldExecuteHandlers(Boolean shouldExecute) {
         if (!System.Test.isRunningTest()) throw new TriggerDispatcherException(CANNOT_DISABLE_TRIGGERS);
-        executeHandlers = shouldExecute;
-    }
-
-    /**
-    * @description Sets handlers in the trigger, useful for testing
-    * @author Thomas Wilkins | 3/2/2020 
-    * @param sObjectType the type of sobject to set the handlers for
-    * @param handlers the specific handlers to be set
-    * @return void 
-    **/
-    public static void setSpecificHandlers(String sObjectType, List<ITriggerHandler> handlers) {
-        if (!System.Test.isRunningTest()) throw new TriggerDispatcherException(CANNOT_SET_HANDLERS);
-        handlerMap.put(sObjectType, handlers);
+        this.executeHandlers = shouldExecute;
     }
 
     /**
@@ -85,11 +76,12 @@ public class TriggerDispatcher {
     * @return List<ITriggerHandler> 
     **/
     @TestVisible
-    private static List<ITriggerHandler> loadHandlers(Schema.SObjectType sObjType) {
+    private List<ITriggerHandler> loadHandlers(Schema.SObjectType sObjType) {
         String sObjTypeStr = String.valueOf(sObjType);
-        if (handlerMap.containsKey(sObjTypeStr)) return handlerMap.get(sObjTypeStr);
+        if (this.handlerMap.containsKey(sObjTypeStr)) return this.handlerMap.get(sObjTypeStr);
 
-        List<SObjectTriggerSetting__mdt> settings = (new SObjectTriggerSettingSelector()).getSObjectTriggerSettings(sObjTypeStr);
+        List<SObjectTriggerSetting__mdt> settings = this.selector.getSObjectTriggerSettings(sObjTypeStr);
+
         // support multiple settings per sObject here in case you have multiple
         // settings split across multiple packages that get 
         List<ITriggerHandler> handlers = new List<ITriggerHandler>();
@@ -100,7 +92,7 @@ public class TriggerDispatcher {
                 handlers.add(handler);
             }
         }
-        handlerMap.put(sObjTypeStr, handlers);
+        this.handlerMap.put(sObjTypeStr, handlers);
         return handlers;
     }
 }
