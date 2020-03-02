@@ -4,17 +4,16 @@
  * @Author             : Thomas Wilkins
  * @Group              : 
  * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 2/28/2020, 9:37:19 PM
+ * @Last Modified On   : 3/2/2020, 10:02:29 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    2/28/2020   Thomas Wilkins     Initial Version
 **/
 public class TriggerDispatcher {
 
-    @TestVisible
     private static final String CANNOT_DISABLE_TRIGGERS = 'Can only disable triggers in a test context.';
+    private static final String CANNOT_SET_HANDLERS = 'Can only set handlers in a test context.';
 
-    @TestVisible
     private static Map<String, List<ITriggerHandler>> handlerMap {
         get {
             if (handlerMap == null) handlerMap = new Map<String, List<ITriggerHandler>>();
@@ -22,7 +21,6 @@ public class TriggerDispatcher {
         } set;
     }
 
-    @TestVisible
     private static TriggerContext ctx {
         get {
             if (ctx == null) ctx = new TriggerContext();
@@ -30,7 +28,6 @@ public class TriggerDispatcher {
         } set;
     }
 
-    @TestVisible
     private static Boolean executeHandlers {
         get {
             if (executeHandlers == null) return false;
@@ -65,8 +62,20 @@ public class TriggerDispatcher {
     * @return void 
     **/
     public static void shouldExecuteHandlers(Boolean shouldExecute) {
-        if (System.Test.isRunningTest()) throw new TriggerDispatcherException(CANNOT_DISABLE_TRIGGERS);
+        if (!System.Test.isRunningTest()) throw new TriggerDispatcherException(CANNOT_DISABLE_TRIGGERS);
         executeHandlers = shouldExecute;
+    }
+
+    /**
+    * @description Sets handlers in the trigger, useful for testing
+    * @author Thomas Wilkins | 3/2/2020 
+    * @param sObjectType the type of sobject to set the handlers for
+    * @param handlers the specific handlers to be set
+    * @return void 
+    **/
+    public static void setSpecificHandlers(String sObjectType, List<ITriggerHandler> handlers) {
+        if (!System.Test.isRunningTest()) throw new TriggerDispatcherException(CANNOT_SET_HANDLERS);
+        handlerMap.put(sObjectType, handlers);
     }
 
     /**
