@@ -4,12 +4,12 @@
  * @Author             : Thomas Wilkins
  * @Group              : 
  * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 3/2/2020, 3:38:05 PM
+ * @Last Modified On   : 3/2/2020, 5:39:53 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    2/28/2020   Thomas Wilkins     Initial Version
 **/
-public class TriggerDispatcher {
+public inherited sharing class TriggerDispatcher {
 
     @TestVisible
     private static final String CANNOT_DISABLE_TRIGGERS = 'Can only disable triggers in a test context.';
