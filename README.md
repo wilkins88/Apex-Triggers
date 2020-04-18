@@ -1,4 +1,4 @@
-# Apex Triggers
+# Apex Triggers [![CircleCI](https://circleci.com/gh/wilkins88/Apex-Triggers.svg?style=svg)](https://circleci.com/gh/wilkins88/Apex-Triggers)
 
 Framework for buildings scalable, modular, and testable trigger implementations. This includes mocks for testing various trigger contexts as well as mechanisms to support proper unit and integration testing.
 
