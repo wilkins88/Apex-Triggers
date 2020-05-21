@@ -49,14 +49,12 @@ Trigger handlers should extend the base virtual class TriggerHandler, and only n
 ```java
 public class MyTriggerHandler extends TriggerHandler {
   public override void doBeforeInsert() {
-    for (Account a : (List<Account>)this.ctx.triggerNew) {
+    for (Account a : (List<Account>)this.ctx.getTriggerNew()) {
       // do trigger logic
     }
   }
 }
 ```
-
-As mentioned before, each feature like this adds tech debt, so it may be worth capturing that as a part of your process. Deeply nested feature flags can become cumbersome and difficult to read, so having tech debt tickets to go back and clean up flags that are no longer needed may be good.
 
 ### Testing Features
 
