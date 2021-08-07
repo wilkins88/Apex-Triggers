@@ -28,9 +28,11 @@ public inherited sharing class TriggerDispatcherFactory {
     /**
      * Creates and returns a TriggerDispatcher for the provided SObjectType
      * @param sObjType Schema.SObjectType type of object to return dispatcher for
+     * @param shouldThrowError whether or not the error should be added to the record, or if the error should
+     * be bubbled up as a hard error. This has impacts details such as cleaner error messages, hiding stack trace details, etc.
      * @return TriggerDispatcher
      */
-    public static TriggerDispatcher create(Schema.SObjectType sObjType) {
+    public static TriggerDispatcher create(Schema.SObjectType sObjType, Boolean shouldThrowError) {
         String sObjTypeStr = String.valueOf(sObjType);
         List<ITriggerHandler> handlers;
         if (loadedHandlers.containsKey(sObjTypeStr)) {
@@ -52,6 +54,6 @@ public inherited sharing class TriggerDispatcherFactory {
             loadedHandlers.put(sObjTypeStr, handlers);
         }
         TriggerContext ctx = new TriggerContext();
-        return new TriggerDispatcher(ctx, handlers);
+        return new TriggerDispatcher(ctx, handlers, shouldThrowError);
     }
 }

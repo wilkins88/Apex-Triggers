@@ -6,7 +6,7 @@
 public inherited sharing class TriggerDispatcher {
 
     @TestVisible
-    private static final String CANNOT_DISABLE_TRIGGERS = 'Can only disable triggers in a test context.';
+    private static final String CANNOT_DISABLE_TRIGGERS = Label.triggerDisableErrorMessage;
 
     @TestVisible
     private TriggerContext ctx;
@@ -23,21 +23,31 @@ public inherited sharing class TriggerDispatcher {
     @TestVisible
     private Boolean executeHandlers {
         get {
-            if (executeHandlers == null) {
-                return true;
+            if (this.executeHandlers == null) {
+                this.executeHandlers = true;
             }
-            return executeHandlers;
+            return this.executeHandlers;
         } set;
     }
+    @TestVisible
+    private Boolean throwException {
+        get {
+            if (this.throwException == null) {
+                this.throwException = false;
+            }
+            return this.throwException;
+        }
+        set;
+    }
 
-    public TriggerDispatcher(TriggerContext ctx, List<ITriggerHandler> handlers) {
+    public TriggerDispatcher(TriggerContext ctx, List<ITriggerHandler> handlers, Boolean throwException) {
         this.ctx = ctx;
         this.handlers = handlers;
+        this.throwException = throwException;
     }
 
     /**
     * Dispatches the trigger handlers for the provided sObjectType
-    * @param sObjType The type of sObject e.g. Account to run triggers for
     * @return void 
     **/
     @SuppressWarnings('PMD.CognitiveComplexity')
@@ -45,29 +55,36 @@ public inherited sharing class TriggerDispatcher {
         if (!executeHandlers) {
             return;
         }
-        for (ITriggerHandler handler : this.handlers) {
-            handler.setTriggerContext(this.ctx);
-            if (this.ctx.isBeforeInsert()) {
-                handler.doBeforeInsert();
+        try {
+            for (ITriggerHandler handler : this.handlers) {
+                handler.setTriggerContext(this.ctx);
+                if (this.ctx.isBeforeInsert()) {
+                    handler.doBeforeInsert();
+                }
+                else if (this.ctx.isBeforeUpdate()) {
+                    handler.doBeforeUpdate();
+                }
+                else if (this.ctx.isBeforeDelete()) { 
+                    handler.doBeforeDelete();
+                }
+                else if (this.ctx.isAfterInsert()) {
+                    handler.doAfterInsert();
+                }
+                else if (this.ctx.isAfterUpdate()) {
+                    handler.doAfterUpdate();
+                }
+                else if (this.ctx.isAfterDelete()) {
+                    handler.doAfterDelete();
+                }
+                else if (this.ctx.isAfterUndelete()) {
+                    handler.doAfterUndelete();
+                }
             }
-            else if (this.ctx.isBeforeUpdate()) {
-                handler.doBeforeUpdate();
+        } catch (Exception e) {
+            if (throwException) {
+                throw e;
             }
-            else if (this.ctx.isBeforeDelete()) { 
-                handler.doBeforeDelete();
-            }
-            else if (this.ctx.isAfterInsert()) {
-                handler.doAfterInsert();
-            }
-            else if (this.ctx.isAfterUpdate()) {
-                handler.doAfterUpdate();
-            }
-            else if (this.ctx.isAfterDelete()) {
-                handler.doAfterDelete();
-            }
-            else if (this.ctx.isAfterUndelete()) {
-                handler.doAfterUndelete();
-            }
+            this.addErrors(e.getMessage());
         }
     }
 
@@ -80,5 +97,24 @@ public inherited sharing class TriggerDispatcher {
     public void shouldExecuteHandlers(Boolean shouldExecute) {
         if (!System.Test.isRunningTest()) throw new TriggerDispatcherException(CANNOT_DISABLE_TRIGGERS);
         this.executeHandlers = shouldExecute;
+    }
+    
+
+    /**
+     * Helper for adding errors to all records 
+     * @param errMsg the error message to all records
+     * @return void
+     */
+    private void addErrors(String errMsg) {
+        // delete triggers only have access to old, everything else can access new
+        if (this.ctx.isBeforeDelete() || this.ctx.isAfterDelete()) {
+            for (SObject record : this.ctx.getTriggerOld()) {
+                this.ctx.addError(record, errMsg);
+            }
+        } else {
+            for (SObject record : this.ctx.getTriggerNew()) {
+                this.ctx.addError(record, errMsg);
+            }
+        }
     }
 }
