@@ -1,19 +1,11 @@
 /**
- * @File Name          : TriggerContext.cls
- * @Description        : Wrapper around System Trigger API
- * @Author             : Thomas Wilkins
- * @Group              : 
- * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 3/2/2020, 5:40:01 PM
- * @Modification Log   : 
- * Ver       Date            Author      		    Modification
- * 1.0    2/28/2020   Thomas Wilkins     Initial Version
+ * Wrapper around System Trigger API. Useful for decoupling custom code from
+ * System APIs, affording other practices such as mocking
 **/
 public inherited sharing class TriggerContext {
 
     /**
-    * @description Returns the array of new/updated records
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns the array of new/updated records
     * @return List<SObject> 
     **/
     public List<SObject> getTriggerNew() {
@@ -21,8 +13,7 @@ public inherited sharing class TriggerContext {
     }
 
     /**
-    * @description Returns a map of new/updated records
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns a map of new/updated records
     * @return List<SObject> 
     **/
     public Map<Id, SObject> getTriggerNewMap() {
@@ -30,8 +21,7 @@ public inherited sharing class TriggerContext {
     }
 
     /**
-    * @description Returns the array of old records
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns the array of old records
     * @return List<SObject> 
     **/
     public List<SObject> getTriggerOld() {
@@ -39,8 +29,7 @@ public inherited sharing class TriggerContext {
     }
     
     /**
-    * @description returns the map of old records
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns the map of old records
     * @return List<SObject> 
     **/
     public Map<Id, SObject> getTriggerOldMap() {
@@ -48,8 +37,7 @@ public inherited sharing class TriggerContext {
     }
 
     /**
-    * @description Returns whether or not the current context is a before insert operation
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns whether or not the current context is a before insert operation
     * @return Boolean 
     **/
     public Boolean isBeforeInsert() {
@@ -57,8 +45,7 @@ public inherited sharing class TriggerContext {
     }
 
     /**
-    * @description Returns whether or not the current context is a before update operation
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns whether or not the current context is a before update operation
     * @return Boolean 
     **/
     public Boolean isBeforeUpdate() {
@@ -66,8 +53,7 @@ public inherited sharing class TriggerContext {
     }
 
     /**
-    * @description Returns whether or not the current context is a before delete operation
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns whether or not the current context is a before delete operation
     * @return Boolean 
     **/
     public Boolean isBeforeDelete() {
@@ -75,8 +61,7 @@ public inherited sharing class TriggerContext {
     }
 
     /**
-    * @description Returns whether or not the current context is an after insert operation
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns whether or not the current context is an after insert operation
     * @return Boolean 
     **/
     public Boolean isAfterInsert() {
@@ -84,8 +69,7 @@ public inherited sharing class TriggerContext {
     }
 
     /**
-    * @description Returns whether or not the current context is an after update operation
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns whether or not the current context is an after update operation
     * @return Boolean 
     **/
     public Boolean isAfterUpdate() {
@@ -93,8 +77,7 @@ public inherited sharing class TriggerContext {
     }
 
     /**
-    * @description Returns whether or not the current context is an after delete operation
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns whether or not the current context is an after delete operation
     * @return Boolean 
     **/
     public Boolean isAfterDelete() {
@@ -102,11 +85,20 @@ public inherited sharing class TriggerContext {
     }
 
     /**
-    * @description Returns whether or not the current context is an after undelete operation
-    * @author Thomas Wilkins | 2/28/2020 
+    * Returns whether or not the current context is an after undelete operation
     * @return Boolean 
     **/
     public Boolean isAfterUndelete() {
         return System.Trigger.operationType == System.TriggerOperation.AFTER_UNDELETE;
+    }
+
+    /**
+     * Wrapper around the trigger record addError method
+     * @param record SObject to add error to
+     * @param errorMessage String error message to attach to the record
+     * @return void
+     */
+    public void addError(SObject record, String errorMessage) {
+        record.addError(errorMessage);
     }
 }

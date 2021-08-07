@@ -1,23 +1,16 @@
 /**
- * @File Name          : SObjectTriggerSettingSelector.cls
- * @Description        : Simple Selector for pulling in sObject Trigger Settings
- * @Author             : Thomas Wilkins
- * @Group              : 
- * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 3/2/2020, 5:40:09 PM
- * @Modification Log   : 
- * Ver       Date            Author      		    Modification
- * 1.0    2/28/2020   Thomas Wilkins     Initial Version
+ * Simple Selector for pulling in sObject Trigger Settings
+ * Ideally in an enterprise org this would sit within a larger, more robust data access framework
 **/
 public inherited sharing class SObjectTriggerSettingSelector {
     /**
-    * @description Returns the appropriate sobject trigger setting and related trigger 
+    * Returns the appropriate sobject trigger setting and related trigger 
     * handler settings for the provided sObjectType String
-    * @author Thomas Wilkins | 2/28/2020 
     * @param sObjType String representation of the sobject type to get settings for
     * @return List<SObjectTriggerSetting__mdt> 
     **/
     public List<SObjectTriggerSetting__mdt> getSObjectTriggerSettings(String sObjType) {
+        // Custom metadata, no security check necessary
         return [
             SELECT SObjectType__c, (SELECT ClassName__c FROM TriggerHandlerSettings__r WHERE IsActive__c = true)
             FROM SObjectTriggerSetting__mdt
