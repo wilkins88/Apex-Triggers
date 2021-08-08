@@ -50,7 +50,6 @@ public inherited sharing class TriggerDispatcher {
     * Dispatches the trigger handlers for the provided sObjectType
     * @return void 
     **/
-    @SuppressWarnings('PMD.CognitiveComplexity')
     public void dispatch() {
         if (!executeHandlers) {
             return;
@@ -95,7 +94,9 @@ public inherited sharing class TriggerDispatcher {
     * @return void 
     **/
     public void shouldExecuteHandlers(Boolean shouldExecute) {
-        if (!System.Test.isRunningTest()) throw new TriggerDispatcherException(CANNOT_DISABLE_TRIGGERS);
+        if (!System.Test.isRunningTest()) {
+            throw new TriggerDispatcherException(CANNOT_DISABLE_TRIGGERS);
+        }
         this.executeHandlers = shouldExecute;
     }
     

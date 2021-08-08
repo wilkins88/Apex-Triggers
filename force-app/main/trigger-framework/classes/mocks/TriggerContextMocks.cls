@@ -1,23 +1,16 @@
 /**
- * @File Name          : TriggerContextMock.cls
- * @Description        : Mock classes that can be used to mock a trigger context in tests
- * @Author             : Thomas Wilkins
- * @Group              : 
- * @Last Modified By   : Thomas Wilkins
- * @Last Modified On   : 3/2/2020, 3:48:25 PM
- * @Modification Log   : 
- * Ver       Date            Author      		    Modification
- * 1.0    2/28/2020   Thomas Wilkins     Initial Version
+ * Mock classes that can be used to mock a trigger context in tests
 **/
 @IsTest
 public class TriggerContextMocks {
 
     public class BeforeInsertMock implements System.StubProvider {
         private List<SObject> triggerNew;
+        private Boolean addErrorCalled;
         public BeforeInsertMock(List<SObject> triggerNew) {
             this.triggerNew = triggerNew;
         }
-
+    
         public Object handleMethodCall(
             Object stubbedObject, 
             String stubbedMethodName,
@@ -49,16 +42,18 @@ public class TriggerContextMocks {
                     return false; 
                 } when 'isAfterUndelete' {
                     return false;
-                } when else {
-                    return null;
-                }
+                } when 'addError' {
+                    this.addErrorCalled = true;
+                } 
             }
+            return null;
         }
     }
 
     public class BeforeUpdateMock implements System.StubProvider {
         private List<SObject> triggerNew, triggerOld;
         private Map<Id, SObject> newMap, oldMap;
+        private Boolean addErrorCalled;
         public BeforeUpdateMock(
             List<SObject> triggerNew,
             Map<Id, SObject> newMap,
@@ -102,16 +97,18 @@ public class TriggerContextMocks {
                     return false; 
                 } when 'isAfterUndelete' {
                     return false;
-                } when else {
-                    return null;
+                } when 'addError' {
+                    this.addErrorCalled = true;
                 }
             }
+            return null;
         }
     }
 
     public class BeforeDeleteMock implements System.StubProvider {
         private List<SObject> triggerOld;
         private Map<Id, SObject> oldMap;
+        private Boolean addErrorCalled;
         public BeforeDeleteMock(List<SObject> triggerOld, Map<Id, SObject> oldMap) {
             this.triggerOld = triggerOld;
             this.oldMap = oldMap;
@@ -148,16 +145,18 @@ public class TriggerContextMocks {
                     return false; 
                 } when 'isAfterUndelete' {
                     return false;
-                } when else {
-                    return null;
+                } when 'addError' {
+                    this.addErrorCalled = true;
                 }
             }
+            return null;
         }
     }
 
     public class AfterInsertMock implements System.StubProvider {
         private List<SObject> triggerNew;
         private Map<Id, SObject> newMap;
+        private Boolean addErrorCalled;
         public AfterInsertMock(List<SObject> triggerNew, Map<Id, SObject> newMap) {
             this.triggerNew = triggerNew;
             this.newMap = newMap;
@@ -194,16 +193,18 @@ public class TriggerContextMocks {
                     return false; 
                 } when 'isAfterUndelete' {
                     return false;
-                } when else {
-                    return null;
-                }
+                } when 'addError' {
+                    this.addErrorCalled = true;
+                } 
             }
+            return null;
         }
     }
 
     public class AfterUpdateMock implements System.StubProvider {
         private List<SObject> triggerNew, triggerOld;
         private Map<Id, SObject> newMap, oldMap;
+        private Boolean addErrorCalled;
         public AfterUpdateMock(
             List<SObject> triggerNew,
             Map<Id, SObject> newMap,
@@ -247,16 +248,18 @@ public class TriggerContextMocks {
                     return false; 
                 } when 'isAfterUndelete' {
                     return false;
-                } when else {
-                    return null;
+                } when 'addError' {
+                    this.addErrorCalled = true;
                 }
             }
+            return null;
         }
     }
 
     public class AfterDeleteMock implements System.StubProvider {
         private List<SObject> triggerOld;
         private Map<Id, SObject> oldMap;
+        private Boolean addErrorCalled;
         public AfterDeleteMock(List<SObject> triggerOld, Map<Id, SObject> oldMap) {
             this.triggerOld = triggerOld;
             this.oldMap = oldMap;
@@ -293,16 +296,18 @@ public class TriggerContextMocks {
                     return true; 
                 } when 'isAfterUndelete' {
                     return false;
-                } when else {
-                    return null;
-                }
+                } when 'addError' {
+                    this.addErrorCalled = true;
+                } 
             }
+            return null;
         }
     }
 
     public class AfterUndeleteMock implements System.StubProvider {
         private List<SObject> triggerNew;
         private Map<Id, SObject> newMap;
+        private Boolean addErrorCalled;
         public AfterUndeleteMock(List<SObject> triggerNew, Map<Id, SObject> newMap) {
             this.triggerNew = triggerNew;
             this.newMap = newMap;
@@ -339,10 +344,11 @@ public class TriggerContextMocks {
                     return false; 
                 } when 'isAfterUndelete' {
                     return true;
-                } when else {
-                    return null;
-                }
+                } when 'addError' {
+                    this.addErrorCalled = true;
+                } 
             }
+            return null;
         }
     }
 }
