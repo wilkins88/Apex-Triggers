@@ -6,7 +6,7 @@ Framework for buildings scalable, modular, and testable trigger implementations.
 
 ## Installing unlocked package
 
-If there is little need to customize the framework, an unlocked package may be the best path. This code can be installed as an unlocked package here: <todo>
+If there is little need to customize the framework, an unlocked package may be the best path. This code can be installed as an unlocked package [here](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t5e000000Jj9FAAS)
 
 For more information on unlocked packages are the right solution, refer to the [unlocked package documentation](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm)
 

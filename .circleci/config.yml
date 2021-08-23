@@ -30,6 +30,7 @@ jobs:
           command: >-
             sfdx force:org:delete --noprompt -u ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
           name: Delete scratch org
+          when: always
       - run:
           name: Deploy to org
           command: |
