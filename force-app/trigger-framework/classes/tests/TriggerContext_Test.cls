@@ -1,5 +1,5 @@
 @IsTest
-private inherited sharing class TriggerHandler_Test {
+private inherited sharing class TriggerContext_Test {
     @IsTest
     private static void doCoverageForEmptyMethods() {
         TriggerContext context = new TriggerContext();
