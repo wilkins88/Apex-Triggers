@@ -95,22 +95,7 @@ While mocking dependencies is typically the preferred approach, there may be tim
 it may be useful to test triggers in isolation. this can be done explicitly setting the handlers. SObjectTriggerSettingSelectorMock accepts a mapping that allows control over what handlers can be executed.
 
 ```java
-Map<String, Object> settingMap = new Map<String, Object>();
-settingMap.put('SObjectType__c', 'Account');
-Map<String, Object> handlers = new Map<String, Object>();
-handlers.put('totalSize', 1);
-handlers.put('done', true);
-handlers.put('records', new List<Map<String, Object>> { new Map<String, Object> {
-    'IsActive__c' => true,
-    'ClassName__c' => 'MyHandler'
-}});
-SettingMap.put('TriggerHandlerSettings__r', handlers);
-Map<String, List<SObjectTriggerSetting__mdt>> settings = new Map<String, List<SObjectTriggerSetting__mdt>> {
-    'Account' => new List<SObjectTriggerSetting__mdt> {
-        (SObjectTriggerSetting__mdt)JSON.deserialize(JSON.serialize(settingMap), SObjectTriggerSetting__mdt.class)
-    }
-};
-SObjectTriggerSettingSelectorMock selectorMock = new SObjectTriggerSettingSelectorMock(settings);
+SObjectTriggerSettingSelectorMock selectorMock = new SObjectTriggerSettingSelectorMock(new Set<String> { 'MyHandlerName' });
 TriggerDispatcherFactory.selector = (SObjectTriggerSettingSelector) System.Test.createStub(SObjectTriggerSettingSelector.class, selectorMock);
 ```
 
