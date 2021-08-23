@@ -19,6 +19,10 @@ public class SObjectTriggerSettingSelectorMock implements System.StubProvider {
         this.handlers = handlers;
     }
 
+    public SObjectTriggerSettingSelectorMock(String handler) {
+        this(new Set<String> { handler });
+    }
+
     public Object handleMethodCall(
         Object stubbedObject, 
         String stubbedMethodName,

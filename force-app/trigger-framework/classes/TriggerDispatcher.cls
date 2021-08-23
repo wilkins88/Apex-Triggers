@@ -77,9 +77,6 @@ public inherited sharing class TriggerDispatcher {
     * @return void 
     **/
     public void shouldExecuteHandlers(Boolean shouldExecute) {
-        if (!System.Test.isRunningTest()) {
-            throw new TriggerDispatcherException(CANNOT_DISABLE_TRIGGERS);
-        }
         this.executeHandlers = shouldExecute;
     }
     
