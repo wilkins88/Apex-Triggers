@@ -71,13 +71,12 @@ public inherited sharing class TriggerDispatcher {
     }
 
     /**
-    * Used to disable triggers in tests. This is good for generating test data without having to deal with impacts 
-    * of other triggers, which makes unit tests less brittle
+    * Used to disable triggers. See readme for usecases and considerations
     * @param shouldExecute Whether or not triggers should execute
     * @return void 
     **/
     public void shouldExecuteHandlers(Boolean shouldExecute) {
-        this.executeHandlers = shouldExecute;
+        executeHandlers = shouldExecute;
     }
     
 
