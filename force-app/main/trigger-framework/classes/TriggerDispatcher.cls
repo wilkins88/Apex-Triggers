@@ -29,21 +29,10 @@ public inherited sharing class TriggerDispatcher {
             return this.executeHandlers;
         } set;
     }
-    @TestVisible
-    private Boolean throwException {
-        get {
-            if (this.throwException == null) {
-                this.throwException = false;
-            }
-            return this.throwException;
-        }
-        set;
-    }
 
-    public TriggerDispatcher(TriggerContext ctx, List<ITriggerHandler> handlers, Boolean throwException) {
+    public TriggerDispatcher(TriggerContext ctx, List<ITriggerHandler> handlers) {
         this.ctx = ctx;
         this.handlers = handlers;
-        this.throwException = throwException;
     }
 
     /**
@@ -80,9 +69,6 @@ public inherited sharing class TriggerDispatcher {
                 }
             }
         } catch (Exception e) {
-            if (throwException) {
-                throw e;
-            }
             this.addErrors(e.getMessage());
         }
     }
