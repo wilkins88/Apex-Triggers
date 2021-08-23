@@ -4,9 +4,15 @@
  * The dispatch method should be invoked directly from the triggers.
 **/
 public inherited sharing class TriggerDispatcher {
-
     @TestVisible
-    private static final String CANNOT_DISABLE_TRIGGERS = Label.triggerDisableErrorMessage;
+    private static Boolean executeHandlers {
+        get {
+            if (executeHandlers == null) {
+                executeHandlers = true;
+            }
+            return executeHandlers;
+        } set;
+    }
 
     @TestVisible
     private TriggerContext ctx;
@@ -19,15 +25,6 @@ public inherited sharing class TriggerDispatcher {
             return this.handlers;
         }
         set;
-    }
-    @TestVisible
-    private Boolean executeHandlers {
-        get {
-            if (this.executeHandlers == null) {
-                this.executeHandlers = true;
-            }
-            return this.executeHandlers;
-        } set;
     }
 
     public TriggerDispatcher(TriggerContext ctx, List<ITriggerHandler> handlers) {

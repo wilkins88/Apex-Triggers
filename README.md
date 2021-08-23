@@ -2,6 +2,18 @@
 
 Framework for buildings scalable, modular, and testable trigger implementations. This includes mocks for testing various trigger contexts as well as mechanisms to support proper unit and integration testing.
 
+# Installing Source
+
+## Installing unlocked package
+
+If there is little need to customize the framework, an unlocked package may be the best path. This code can be installed as an unlocked package here: <todo>
+
+For more information on unlocked packages are the right solution, refer to the [unlocked package documentation](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_unlocked_pkg_intro.htm)
+
+## Download source
+
+If you anticipate making changes to the framework to tailor it to your own needs, then the best path may be to download the source as a zip, extract the files, and move them into your project.
+
 ## Configuring Handlers
 
 ### Configuring the SObject Trigger
@@ -37,7 +49,7 @@ Create a new trigger file e.g. AccountTrigger.trigger and set it to fire for all
 
 ```java
 trigger AccountTrigger on Account (before insert, before update, before delete, after insert, after update, after delete, after undelete) {
-  (new TriggerDispatcher(new TriggerContext(), new SObjectTriggerSettingSelector())).dispatch(Account.getSObjectType());
+  TriggerDispatcherFactory.create(Account.getSObjectType()).dispatch();
 }
 
 ```
@@ -56,22 +68,31 @@ public class MyTriggerHandler extends TriggerHandler {
 }
 ```
 
+## Disabling Triggers
+
+There may be several cases for which you want to intelligently disable triggers from code:
+
+- Disable triggers for test data generation
+- Disable triggers for ongoing migration or sync jobs
+- Disable triggers for specific processes
+
+While these use-cases may be few, and all risks and implications should be heavily considered, disabling triggers is easily done
+by invoking the shouldExecuteHandlers static method
+
+```java
+TriggerDispatcher.shouldExecuteHandlers(false);// code beyond this will ignore handlers
+// ... do some stuff
+TriggerDispatcher.shouldExecuteHandlers(true); // code respects trigger logic again
+```
+
 ### Testing Features
 
 There are several classes and methods that can be used to support testing efforts:
 
-## Disabling Triggers
-
-To disable triggers, which can be useful for generating test data without needing to run through all other triggers (making unit tests brittle, and hardly unit tests) the call the shouldExecuteHandlers method on the TriggerDispatcher object.
-
-```java
-TriggerDispatcher disp = new TriggerDispatcher(new TriggerContext(), new SObjectTriggerSettingSelector());
-disp.shouldExecuteHandlers(false); // this will now ignore handlers
-```
-
 ## Limiting Handlers
 
-Another useful capability is the ability to test triggers in isolation. this can be done by mocking handlers. SObjectTriggerSettingSelectorMock accepts a mapping that allows control over what handlers can be executed.
+While mocking dependencies is typically the preferred approach, there may be times when you need to test with a DML operation. In those cases,
+it may be useful to test triggers in isolation. this can be done explicitly setting the handlers. SObjectTriggerSettingSelectorMock accepts a mapping that allows control over what handlers can be executed.
 
 ```java
 Map<String, Object> settingMap = new Map<String, Object>();
@@ -81,7 +102,7 @@ handlers.put('totalSize', 1);
 handlers.put('done', true);
 handlers.put('records', new List<Map<String, Object>> { new Map<String, Object> {
     'IsActive__c' => true,
-    'ClassName__c' => 'TriggerDispatcher_Test.TriggerHandlerMock'
+    'ClassName__c' => 'MyHandler'
 }});
 SettingMap.put('TriggerHandlerSettings__r', handlers);
 Map<String, List<SObjectTriggerSetting__mdt>> settings = new Map<String, List<SObjectTriggerSetting__mdt>> {
@@ -89,10 +110,14 @@ Map<String, List<SObjectTriggerSetting__mdt>> settings = new Map<String, List<SO
         (SObjectTriggerSetting__mdt)JSON.deserialize(JSON.serialize(settingMap), SObjectTriggerSetting__mdt.class)
     }
 };
-return new SObjectTriggerSettingSelectorMock(settings);
+SObjectTriggerSettingSelectorMock selectorMock = new SObjectTriggerSettingSelectorMock(settings);
+TriggerDispatcherFactory.selector = (SObjectTriggerSettingSelector) System.Test.createStub(SObjectTriggerSettingSelector.class, selectorMock);
 ```
 
 ## Mocking Trigger Context
+
+Often times, we will want to mock trigger contexts to execute true unit tests. Tests that rely on DML are inherently integration tests, because they test
+all automation (workflows, validation rules, process builders, etc.) that live on an object. 
 
 There are a set of classes -- 1 parent class with several inner classes -- which can be used to mock various trigger states. To use them in a test, just inject them into the handler:
 
