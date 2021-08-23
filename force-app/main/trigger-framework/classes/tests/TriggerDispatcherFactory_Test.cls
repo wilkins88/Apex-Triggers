@@ -7,9 +7,8 @@ private inherited sharing class TriggerDispatcherFactory_Test {
             new SObjectTriggerSettingSelectorMock()
         );
         System.Test.startTest();
-        TriggerDispatcher disp = TriggerDispatcherFactory.create(Account.getSObjectType(), true);
+        TriggerDispatcher disp = TriggerDispatcherFactory.create(Account.getSObjectType());
         System.Test.stopTest();
-        System.assertEquals(true, disp.throwException);
         System.assertNotEquals(null, disp.ctx);
         System.assertEquals(1, disp.handlers.size());
     }
